@@ -1,0 +1,34 @@
+[
+    {
+        "activity_name": "Mining",
+        "subactivityMap": [
+            {
+                "sub_activity_name": "Coal Mining",
+                "threshold_value": 0
+            },
+            {
+                "sub_activity_name": "Non-Coal Mining (Major Minerals)",
+                "threshold_value": 0
+            },
+            {
+                "sub_activity_name": "Asbestos Mining",
+                "threshold_value": 0
+            }
+        ],
+        "threshold_parameter": "Mine Lease Area",
+        "threshold_unit": "HA",
+        "threshold_value": 0
+    },
+    {
+        "activity_name": "River Valley projects",
+        "subactivityMap": [
+            {
+                "sub_activity_name": "Hydroelectric power generation",
+                "threshold_value": 25
+            }
+        ],
+        "threshold_parameter": "Generation Capacity",
+        "threshold_unit": "MW",
+        "threshold_value": 25
+    }
+]

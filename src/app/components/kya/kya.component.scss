@@ -1,0 +1,137 @@
+.content {
+    height: 80%;
+    .title {
+        padding: 0 0.5rem;
+        h2 {
+            margin-bottom: 6px;
+            font-size: 24px;
+        }
+        span {
+            font-weight: 500;
+        }
+    }
+    .kya-form {
+        padding: 8px;
+        border: 1px solid #E1E1E1;
+        margin: 8px;
+        border-radius: 8px;
+        height: inherit;
+
+        .activity-dd {
+            .p-dropdown-label {
+                font-size: 13px;
+                color: #B0B0B0;
+                padding: 9px;
+                width: 250px;
+            }
+        }
+
+        .activity-panel {
+            .p-dropdown-items-wrapper {
+                font-size: 12px;
+                color: #B0B0B0;
+                width: 400px;
+                .p-dropdown-items .p-dropdown-item {
+                    padding: 0.5rem 1rem;
+                    white-space: normal;
+                }
+            }
+        }
+
+        .capacity {
+            padding: 0.58rem 1rem;
+            font-size: 12px;
+        }
+        .capacity-addon {
+            padding: 0.58rem 1rem;
+            font-size: 12px;
+        }
+        .button-border {
+            padding: 1rem;
+            border-radius: 16px;
+            border: 2px dashed lightgray;
+
+            .upload-text {
+                padding: 0 1.5rem;
+                align-self: center;
+                color: #B0B0B0;
+            }
+        }
+        .button-color {
+            background-color: #1B8CFB;
+            color: #fff;
+            font-size: 11px;
+            padding: 0.5rem 2.5rem;
+        }
+        .upload {
+            align-self: center;
+            padding: 1rem;
+            margin-top: 1.5rem;
+
+            .upload-btn {
+                background-color: #43B267;
+                color: #fff;
+                font-size: 11px;
+                padding: 0.5rem 2.75rem;
+                border: 1px solid #43B267;
+            }
+            .upload-btn:disabled {
+                background-color: #B4B4B480;
+                color: #000000;
+                font-size: 11px;
+                padding: 0.5rem 2.75rem;
+                border: 1px solid #B4B4B480;
+            }
+        }
+        .error-msg {
+            align-self: center;
+            margin-top: 1.5rem;
+
+            .p-inline-message .p-inline-message-text {
+                font-size: 12px;
+            }
+        }
+        .note {
+            color: #D84910;
+            font-size: 12px;
+        }
+        .chip {
+            border: 1px solid #43B267;
+            border-radius: 8px;
+            min-width: 200px;
+            display: inline-block;
+
+            i {
+                color: #43B267;
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+.captcha-dialog {
+
+    .p-dialog-header .p-dialog-title {
+        font-size: 14px;
+    }
+
+    .p-dialog-content {
+        span {
+            margin-right: 8rem;
+            font-weight: 500;
+        }
+        .captcha-input {
+            padding: 0.58rem 1rem;
+            font-size: 12px;
+        }
+    }
+    .p-dialog-footer {
+        .upload-btn {
+            background-color: #43B267;
+            color: #fff;
+            font-size: 11px;
+            padding: 0.5rem 2.75rem;
+            border: 1px solid #43B267;
+        }
+    }
+}
