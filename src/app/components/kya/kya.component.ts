@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Activity, SubactivityMap } from 'src/app/model/activity.model';
+import { ActivityData } from 'src/app/model/activityData.model';
 import { ActivitiesService } from 'src/app/services/activities.service';
 @Component({
   selector: 'app-kya',
@@ -33,7 +34,7 @@ export class KyaComponent implements OnInit {
   activitySelected(selectedValue: Activity) {
     this.subActivities = selectedValue.subactivityMap;
     this.thresholdUnit = selectedValue.threshold_unit;
-    if(this.subActivities.length == 0) {
+    if (this.subActivities.length == 0) {
       this.capacity = selectedValue.threshold_value;
     }
   }
@@ -58,7 +59,7 @@ export class KyaComponent implements OnInit {
   }
 
   checkForm() {
-    if (((this.activity && this.capacity) || this.subActivity) && (this.file != null && !this.error)) {
+    if (((this.activity && this.capacity) && this.subActivity) && (this.file != null && !this.error)) {
       return false;
     } else {
       return true;
@@ -82,12 +83,28 @@ export class KyaComponent implements OnInit {
   uploadKml() {
     this.displayDialog = true;
     this.getCaptcha(6);
+
   }
 
   checkCaptcha() {
     if (this.userEnterCaptcha == this.captchatext) {
       this.displayDialog = false;
       this.userEnterCaptcha = '';
+      const activity = new ActivityData();
+      activity.activity = this.activity.activity_name;
+      activity.subactivity = this.subActivity?.sub_activity_name;
+      activity.capacity = this.capacity;
+      activity.activityId = this.activity.activityId;
+      activity.subActivityId = this.subActivity.subactivityId;
+      this.activityService.userActivityService(activity, this.file).subscribe(data => {
+        this.activity = null as any;
+        this.subActivity = null as any;
+        this.capacity = null;
+        this.subActivities = [];
+        this.file = null as any;
+        this.fileObj = undefined
+        console.log(data);
+      });
     } else {
       this.getCaptcha(6);
       this.userEnterCaptcha = ''
