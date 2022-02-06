@@ -49,7 +49,7 @@
             <div class="p-2 d-grid ">
                 <span>Upload Project area of interest GIS Map/KML File <span style="color: #F03D3E;">*</span> </span>
                 <div class="button-border d-flex" appDragNDrop (fileDropped)="onFileChoose($event)">
-                    <input class="d-none" type="file" (change)="onFileChoose($event)" #file>
+                    <input class="d-none" type="file" onclick="this.value = null" (change)="onFileChoose($event)" #file>
                     <button pButton pRipple type="button" (click)="file.click()" label="Choose Files"
                         class="p-button-raised p-button-sm button-color"></button>
                     <div class="upload-text">or Drop Files</div>

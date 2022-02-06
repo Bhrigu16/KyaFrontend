@@ -33,12 +33,13 @@ export class KyaComponent implements OnInit {
 
   activitySelected(selectedValue: Activity) {
     this.subActivities = selectedValue.subactivityMap;
-    this.thresholdUnit = selectedValue.threshold_unit;
     if (this.subActivities.length == 0) {
+      this.thresholdUnit = selectedValue.threshold_unit;
       this.capacity = selectedValue.threshold_value;
     }
   }
   subActivitySelected(selectedValue: SubactivityMap) {
+    this.thresholdUnit = selectedValue.threshold_unit;
     this.capacity = selectedValue.threshold_value;
   }
 
@@ -59,7 +60,7 @@ export class KyaComponent implements OnInit {
   }
 
   checkForm() {
-    if (((this.activity && this.capacity) && this.subActivity) && (this.file != null && !this.error)) {
+    if (((this.activity && this.capacity) || this.subActivity) && (this.file != null && !this.error)) {
       return false;
     } else {
       return true;
