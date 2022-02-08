@@ -46,6 +46,11 @@
             padding: 0.58rem 1rem;
             font-size: 12px;
         }
+        .limit-error {
+            font-size: 10px;
+            position: absolute;
+            margin-top: 60px;
+        }
         .button-border {
             padding: 1rem;
             border-radius: 16px;
@@ -120,9 +125,14 @@
             margin-right: 8rem;
             font-weight: 500;
         }
-        .captcha-input {
-            padding: 0.58rem 1rem;
-            font-size: 12px;
+        .captcha {
+            .captcha-input {
+                padding: 0.58rem 1rem;
+                font-size: 12px;
+            }
+            small {
+                font-size: 10px;
+            }
         }
     }
     .p-dialog-footer {

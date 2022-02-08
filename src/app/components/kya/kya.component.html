@@ -1,12 +1,13 @@
-<p-dialog header="Confirm enter captcha proceed to the know your approval" [(visible)]="displayDialog"
+<p-dialog header="Confirm enter captcha proceed to the know your approval" [modal]="true" [(visible)]="displayDialog"
     styleClass="captcha-dialog">
     <div class="d-flex flex-column align-items-center">
         <span>Captcha</span>
         <div>
             <canvas style="border: 1px solid; border-radius: 4px;" width="200" height="60" #myCanvas></canvas>
         </div>
-        <div>
-            <input class="captcha-input" type="text" placeholder="Enter Captcha" [(ngModel)]="userEnterCaptcha" pInputText />
+        <div class="d-grid captcha">
+            <input class="captcha-input" [ngClass]="{'ng-invalid ng-dirty': captchaErrorMsg}" type="text" (keyup)="resetError()" aria-describedby="error-captcha" placeholder="Enter Captcha" [(ngModel)]="userEnterCaptcha" pInputText />
+            <small *ngIf="captchaErrorMsg" id="error-captcha" class="p-error block">Captcha mismatch, Please enter again.</small>
         </div>
     </div>
     <ng-template pTemplate="footer">
@@ -14,6 +15,7 @@
             class="p-button-raised p-button-sm upload-btn"></button>
     </ng-template>
 </p-dialog>
+<p-toast position="bottom-center" key="submit"></p-toast>
 <div class="container-fluid content">
     <div class="title">
         <h2>Know Your Approvals</h2>
@@ -39,10 +41,11 @@
             <div class="p-2 d-grid">
                 <span>Project Capacity <span style="color: #F03D3E;">*</span> </span>
                 <div class="p-inputgroup">
-                    <input class="capacity" type="text" [(ngModel)]="capacity" pInputText />
+                    <input class="capacity" [ngClass]="{'ng-invalid ng-dirty': capacityError}" type="text" id="capacity-error" [(ngModel)]="capacity" pInputText />
                     <span class="p-inputgroup-addon capacity-addon" *ngIf="thresholdUnit">({{thresholdUnit}})</span>
                     <span class="p-inputgroup-addon capacity-addon" *ngIf="!thresholdUnit">(Unit)</span>
                 </div>
+                <small *ngIf="capacityError" id="capacity-error" class="p-error block limit-error">Your capacity input is below threshold value {{subActivity?subActivity.threshold_value:activity.threshold_value}}. Please input more than value.</small>
             </div>
         </div>
         <div class="d-flex pt-5">
@@ -59,10 +62,10 @@
                 <button pButton pRipple type="button" [disabled]="checkForm()" label="Submit"
                     class="p-button-raised p-button-sm upload-btn" (click)="uploadKml()"></button>
             </div>
-            <!-- <div class="error-msg" *ngIf="error">
+            <div class="error-msg" *ngIf="error">
                 <p-message severity="error" text="Chosen file is not kml. Please choose the kml file to proceed">
                 </p-message>
-            </div> -->
+            </div>
         </div>
         <div class="p-2">
             <span class="note">Note: Please upload KML file only.</span>

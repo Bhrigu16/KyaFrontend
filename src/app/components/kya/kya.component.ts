@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { MessageService } from 'primeng/api';
 import { Activity, SubactivityMap } from 'src/app/model/activity.model';
 import { ActivityData } from 'src/app/model/activityData.model';
 import { ActivitiesService } from 'src/app/services/activities.service';
@@ -20,10 +21,12 @@ export class KyaComponent implements OnInit {
   file: File = null as any;
   fileObj: any;
   error: boolean = false;
+  capacityError: boolean = false;
   captchatext: any;
   userEnterCaptcha: any;
   displayDialog: boolean = false;
-  constructor(private activityService: ActivitiesService) { }
+  captchaErrorMsg: boolean = false;
+  constructor(private activityService: ActivitiesService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.activityService.activityService().subscribe((data: Activity[]) => {
@@ -35,12 +38,10 @@ export class KyaComponent implements OnInit {
     this.subActivities = selectedValue.subactivityMap;
     if (this.subActivities.length == 0) {
       this.thresholdUnit = selectedValue.threshold_unit;
-      this.capacity = selectedValue.threshold_value;
     }
   }
   subActivitySelected(selectedValue: SubactivityMap) {
     this.thresholdUnit = selectedValue.threshold_unit;
-    this.capacity = selectedValue.threshold_value;
   }
 
   onFileChoose(event: any) {
@@ -82,9 +83,17 @@ export class KyaComponent implements OnInit {
   }
 
   uploadKml() {
-    this.displayDialog = true;
-    this.getCaptcha(6);
-
+    
+    if(this.subActivity && this.capacity < this.subActivity.threshold_value) {
+      this.capacityError = true;
+    } else if(this.activity && this.capacity < this.activity.threshold_value) {
+      this.capacityError = true;
+    } else {
+      this.capacityError = false;
+      this.displayDialog = true;
+      this.captchaErrorMsg = false;
+      this.getCaptcha(6);
+    }
   }
 
   checkCaptcha() {
@@ -98,8 +107,12 @@ export class KyaComponent implements OnInit {
       activity.activityId = this.activity.activityId;
       activity.subActivityId = this.subActivity.subactivityId;
       this.activityService.userActivityService(activity, this.file).subscribe(data => {
+        if(data) {
+          this.messageService.add({key:'submit',severity:'success', summary:'Project Activity', detail:'Project activity and KML file uploaded successfully.'});
+        }
         this.activity = null as any;
         this.subActivity = null as any;
+        this.thresholdUnit = 'Unit';
         this.capacity = null;
         this.subActivities = [];
         this.file = null as any;
@@ -108,7 +121,14 @@ export class KyaComponent implements OnInit {
       });
     } else {
       this.getCaptcha(6);
+      this.captchaErrorMsg = true;
       this.userEnterCaptcha = ''
+    }
+  }
+
+  resetError() {
+    if(this.captchaErrorMsg) {
+      this.captchaErrorMsg = false;
     }
   }
 
