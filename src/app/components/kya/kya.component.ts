@@ -1,8 +1,10 @@
 import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { Activity, SubactivityMap } from 'src/app/model/activity.model';
+import { Activity, Subactivity, ThresholdParameter } from 'src/app/model/activity.model';
 import { ActivityData } from 'src/app/model/activityData.model';
 import { ActivitiesService } from 'src/app/services/activities.service';
+import { hrefLink } from 'src/app/shared/app-constant';
 @Component({
   selector: 'app-kya',
   templateUrl: './kya.component.html',
@@ -13,10 +15,11 @@ export class KyaComponent implements OnInit {
   @ViewChild('myCanvas')
   myCanvas!: ElementRef<HTMLCanvasElement>;
   activities: Activity[] = [];
-  subActivities: SubactivityMap[] = [];
-  thresholdUnit: any;
+  subActivities: Subactivity[] = [];
+  thresholdUnit: ThresholdParameter[] = [];
+  unit: ThresholdParameter = <ThresholdParameter>{};
   activity: Activity = <Activity>{};
-  subActivity: SubactivityMap = <SubactivityMap>{};
+  subActivity: Subactivity = <Subactivity>{};
   capacity: any;
   file: File = null as any;
   fileObj: any;
@@ -26,7 +29,7 @@ export class KyaComponent implements OnInit {
   userEnterCaptcha: any;
   displayDialog: boolean = false;
   captchaErrorMsg: boolean = false;
-  constructor(private activityService: ActivitiesService, private messageService: MessageService) { }
+  constructor(private activityService: ActivitiesService, private messageService: MessageService, private router: Router) { }
 
   ngOnInit(): void {
     this.activityService.activityService().subscribe((data: Activity[]) => {
@@ -35,13 +38,29 @@ export class KyaComponent implements OnInit {
   }
 
   activitySelected(selectedValue: Activity) {
-    this.subActivities = selectedValue.subactivityMap;
+    this.subActivities = selectedValue.subactivity;
     if (this.subActivities.length == 0) {
-      this.thresholdUnit = selectedValue.threshold_unit;
+      if (selectedValue.thresholdParameter.length >= 1) {
+        this.thresholdUnit = selectedValue.thresholdParameter;
+        this.unit = this.thresholdUnit[0];
+      } else {
+        this.thresholdUnit = [];
+        this.unit = <ThresholdParameter>{};
+        this.unit.threshold_unit = 'Unit';
+      }
+    } else {
+      this.thresholdUnit = [];
+      this.unit = <ThresholdParameter>{};
+      this.unit.threshold_unit = 'Unit';
     }
   }
-  subActivitySelected(selectedValue: SubactivityMap) {
-    this.thresholdUnit = selectedValue.threshold_unit;
+  subActivitySelected(selectedValue: Subactivity) {
+    this.thresholdUnit = selectedValue.thresholdParameter;
+    this.unit = this.thresholdUnit[0];
+  }
+
+  thresholdUnitSelected(selectedValue: ThresholdParameter) {
+    this.unit = selectedValue;
   }
 
   onFileChoose(event: any) {
@@ -83,17 +102,17 @@ export class KyaComponent implements OnInit {
   }
 
   uploadKml() {
-    
-    if(this.subActivity && this.capacity < this.subActivity.threshold_value) {
-      this.capacityError = true;
-    } else if(this.activity && this.capacity < this.activity.threshold_value) {
-      this.capacityError = true;
-    } else {
-      this.capacityError = false;
-      this.displayDialog = true;
-      this.captchaErrorMsg = false;
-      this.getCaptcha(6);
-    }
+
+    // if(this.subActivity && this.capacity < this.subActivity.threshold_value) {
+    //   this.capacityError = true;
+    // } else if(this.activity && this.capacity < this.activity.threshold_value) {
+    //   this.capacityError = true;
+    // } else {
+    //   this.capacityError = false;
+    // }
+    this.displayDialog = true;
+    this.captchaErrorMsg = false;
+    this.getCaptcha(6);
   }
 
   checkCaptcha() {
@@ -101,23 +120,46 @@ export class KyaComponent implements OnInit {
       this.displayDialog = false;
       this.userEnterCaptcha = '';
       const activity = new ActivityData();
-      activity.activity = this.activity.activity_name;
-      activity.subactivity = this.subActivity?.sub_activity_name;
+      activity.activity = this.activity.name;
+      activity.subactivity = this.subActivity?.name;
       activity.capacity = this.capacity;
-      activity.activityId = this.activity.activityId;
-      activity.subActivityId = this.subActivity.subactivityId;
-      this.activityService.userActivityService(activity, this.file).subscribe(data => {
-        if(data) {
-          this.messageService.add({key:'submit',severity:'success', summary:'Project Activity', detail:'Project activity and KML file uploaded successfully.'});
+      activity.activityId = this.activity.id;
+      activity.subActivityId = this.subActivity.id;
+      this.activityService.userActivityService(activity, this.file).subscribe((data: any) => {
+        if (data) {
+          this.messageService.add({ key: 'submit', severity: 'success', summary: 'Project Activity', detail: 'Project activity and KML file uploaded successfully.' });
         }
+
+
+        /*
+        const params = new HttpParams()
+        .set('projectType',this.activity.activityId)
+        .set('projectSubtype', this.subActivity.subactivityId)
+        .set('capacity',this.capacity)
+        .set('kmlId',data.id);
+        */
+
+        //http://localhost:8080/examples/Sourav10_02Integration/gis-map.html?projectType=3&projectSubtype=1&capacity=40&kmlId=1
+        window.location.href = hrefLink + "?projectType=" + this.activity.id +
+          "&projectSubtype=" + this.subActivity.id +
+          "&capacity=" + this.capacity +
+          "&kmlId=" + data.id +
+          "&projectTypeName=" + this.activity.name +
+          "&projectSubtypeName=" + this.subActivity.name +
+          "&capacityUnit=" + this.unit.threshold_unit;
+
+        //http://localhost/pariveshdss/Sourav10_02Integration/gis-map.html?projectType=3&projectSubtype=1&capacity=40&kmlId=17
+
         this.activity = null as any;
         this.subActivity = null as any;
-        this.thresholdUnit = 'Unit';
+        this.unit = <ThresholdParameter>{};
+        this.unit.threshold_unit = 'Unit';
         this.capacity = null;
         this.subActivities = [];
         this.file = null as any;
         this.fileObj = undefined
         console.log(data);
+
       });
     } else {
       this.getCaptcha(6);
@@ -127,7 +169,7 @@ export class KyaComponent implements OnInit {
   }
 
   resetError() {
-    if(this.captchaErrorMsg) {
+    if (this.captchaErrorMsg) {
       this.captchaErrorMsg = false;
     }
   }

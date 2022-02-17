@@ -1,0 +1,72 @@
+<div #body>
+    <div class="sub-header">
+        <div>
+            <img src="./assets/images/Emblem.png" alt="" height="72" width="42">
+        </div>
+        <div class="header-1">
+            <span class="hindi-text">परिवेश</span>
+            <div class="hl"></div>
+            <span>PARIVESH</span>
+            <span class="full-form">"Pro aActive and Responsive facilitation by Interactive and Virtuous Environmental
+                Singlewindow Hub"</span>
+        </div>
+        <span class="example-spacer"></span>
+        <div class="header-2">
+            <span class="hindi-text">पर्यावरण,वन और जलवायु परिवर्तन मंत्रालय</span>
+            <span>Ministry of Environment, Forest and Climate Change</span>
+        </div>
+        <img class="emb-1" src="./assets/images/emb5.png" alt="" height="60" width="72">
+    </div>
+    <div class="title">
+        <h3>Know your Approvals - </h3>
+        <h2>Tentative Applicabilty of Green Clearances</h2>
+    </div>
+    <div class="content">
+        <div class="map">
+            <img [src]="reportData.mapImageUrl" alt="">
+        </div>
+        <div class="clearance">
+            <div class="clearance-table">
+                Recommended Clearances
+            </div>
+            <table>
+                <tr>
+                    <th>S.No</th>
+                    <th>Approval</th>
+                    <th>Applicabilty</th>
+                    <th>Remarks</th>
+                </tr>
+                <tr *ngFor="let row of reportData.Clearances">
+                    <td>{{row.id}}</td>
+                    <td>{{row.approval}}</td>
+                    <td>
+                        <span
+                            [ngClass]="{'condition-true': row.applicability == 'Yes',  'condition-false': row.applicability == 'No'}">{{row.applicability}}</span>
+                    </td>
+                    <td>{{row.remarks}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="toposheet">
+        <table class="toposheet-table">
+            <tr>
+                <th>State</th>
+                <th>District</th>
+                <th>Village</th>
+                <th>Toposheet No.</th>
+            </tr>
+            <tr *ngFor="let row of reportData.toposheet">
+                <td>{{row.state}}</td>
+                <td>{{row.district}}</td>
+                <td>{{row.village}}</td>
+                <td>{{row.toposheet_number}}</td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="disclaimer">
+        <span>Disclaimer: This map is classified and to be used for guide purpose only.</span>
+        <span>Note: This is computer generated report.</span>
+    </div>
+</div>

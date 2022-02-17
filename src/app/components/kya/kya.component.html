@@ -19,46 +19,50 @@
 <div class="container-fluid content">
     <div class="title">
         <h2>Know Your Approvals</h2>
-        <span>Please fill the below given form to know your tentative list of Clearance and Approvals</span>
+        <span>Please fill the below given form to know your tentative list of Clearance and Approvals <i class="pi pi-question-circle"></i></span>
     </div>
     <div class="d-flex flex-row-reverse">
         <span class="pe-3" style="font-weight: 500;"><span style="color: #F03D3E;">*</span> Indicates mandatory
             fields</span>
     </div>
     <div class="kya-form">
-        <div class="d-flex">
-            <div class="p-2 d-grid">
-                <span>Project Activity <span style="color: #F03D3E;">*</span> </span>
+        <div class="row d-flex">
+            <div class="col-md-4 p-3 d-grid">
+                <span>Project/Activity <span style="color: #F03D3E;">*</span> </span>
                 <p-dropdown [options]="activities" [(ngModel)]="activity" (onChange)="activitySelected($event.value)"
-                    placeholder="Select" optionLabel="activity_name" styleClass="activity-dd" panelStyleClass="activity-panel">
+                    placeholder="Select" optionLabel="name" styleClass="activity-dd" panelStyleClass="activity-panel">
                 </p-dropdown>
             </div>
-            <div class="p-2 d-grid" *ngIf="subActivities.length > 0">
-                <span>Project Sub Activity <span style="color: #F03D3E;">*</span> </span>
-                <p-dropdown [options]="subActivities" [(ngModel)]="subActivity" optionLabel="sub_activity_name" placeholder="Select"
+            <div class="col-md-4 p-3 d-grid" *ngIf="subActivities.length > 0">
+                <span>Sub Activity <span style="color: #F03D3E;">*</span> </span>
+                <p-dropdown [options]="subActivities" [(ngModel)]="subActivity" optionLabel="name" placeholder="Select"
                     styleClass="activity-dd" panelStyleClass="activity-panel" (onChange)="subActivitySelected($event.value)"></p-dropdown>
             </div>
-            <div class="p-2 d-grid">
-                <span>Project Capacity <span style="color: #F03D3E;">*</span> </span>
+            <div class="col-md-4 p-3 d-grid">
+                <span>Project Capacity/Extent <span style="color: #F03D3E;">*</span> </span>
                 <div class="p-inputgroup">
                     <input class="capacity" [ngClass]="{'ng-invalid ng-dirty': capacityError}" type="text" id="capacity-error" [(ngModel)]="capacity" pInputText />
-                    <span class="p-inputgroup-addon capacity-addon" *ngIf="thresholdUnit">({{thresholdUnit}})</span>
-                    <span class="p-inputgroup-addon capacity-addon" *ngIf="!thresholdUnit">(Unit)</span>
+                    <span class="p-inputgroup-addon capacity-addon" *ngIf="thresholdUnit && thresholdUnit.length==1">({{unit.threshold_unit}})</span>
+                    <span class="p-inputgroup-addon capacity-addon" *ngIf="thresholdUnit.length == 0">(Unit)</span>
+                    <span class="p-inputgroup-addon capacity-addon" *ngIf="thresholdUnit.length > 1">
+                        <p-dropdown [options]="thresholdUnit" [(ngModel)]="unit" optionLabel="threshold_unit" placeholder="Select"
+                    styleClass="unit-dd" panelStyleClass="unit-panel" (onChange)="thresholdUnitSelected($event.value)"></p-dropdown>
+                    </span>
                 </div>
-                <small *ngIf="capacityError" id="capacity-error" class="p-error block limit-error">Your capacity input is below threshold value {{subActivity?subActivity.threshold_value:activity.threshold_value}}. Please input more than value.</small>
+                <!-- <small *ngIf="capacityError" id="capacity-error" class="p-error block limit-error">Your capacity input is below threshold value {{subActivity?subActivity.threshold_value:activity.threshold_value}}. Please input more than value.</small> -->
             </div>
         </div>
-        <div class="d-flex pt-5">
-            <div class="p-2 d-grid ">
+        <div class="row d-flex pt-3 mobile-upload">
+            <div class="col-md-4 p-3 d-grid ">
                 <span>Upload Project area of interest GIS Map/KML File <span style="color: #F03D3E;">*</span> </span>
                 <div class="button-border d-flex" appDragNDrop (fileDropped)="onFileChoose($event)">
                     <input class="d-none" type="file" onclick="this.value = null" (change)="onFileChoose($event)" #file>
-                    <button pButton pRipple type="button" (click)="file.click()" label="Choose Files"
+                    <button pButton pRipple type="button" (click)="file.click()" label="Choose KML"
                         class="p-button-raised p-button-sm button-color"></button>
                     <div class="upload-text">or Drop Files</div>
                 </div>
             </div>
-            <div class="upload">
+            <div class="col-md-4 upload">
                 <button pButton pRipple type="button" [disabled]="checkForm()" label="Submit"
                     class="p-button-raised p-button-sm upload-btn" (click)="uploadKml()"></button>
             </div>
@@ -67,7 +71,7 @@
                 </p-message>
             </div>
         </div>
-        <div class="p-2">
+        <div class="row">
             <span class="note">Note: Please upload KML file only.</span>
         </div>
         <div class="chip d-inline-flex justify-content-between" *ngIf="fileObj">

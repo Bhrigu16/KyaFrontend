@@ -1,0 +1,12 @@
+{
+    "Clearances": [
+        {"id":1, "approval":"Environment Clearance", "applicability":"Yes","remarks":"if any"},
+        {"id":2, "approval":"Forest Clearance", "applicability":"No","remarks":"if any"},
+        {"id":3, "approval":"Wildlife Clearance", "applicability":"No","remarks":"if any"},
+        {"id":4, "approval":"Coastal Region Clearance", "applicability":"Yes","remarks":"if any"}
+    ],
+    "toposheet": [
+        {"toposheet_number":"39L/12", "state":"Rajasthan", "district":"Jaipur", "village":"Nahargarh"}
+    ],
+    "mapImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/India_Madhya_Pradesh_locator_map.svg/1200px-India_Madhya_Pradesh_locator_map.svg.png"
+}

@@ -16,3 +16,26 @@
         }
     }
 }
+
+
+@media screen and (max-width: 750px) {
+    .footer {
+        height: 120px;
+        font-size: 6px;
+        background-color: #005457;
+        white-space: normal;
+        color: #fff;
+    
+        hr {
+            margin: 0;
+        }
+    
+        .footer-subtext {
+            margin-bottom: 12px;
+            font-size: 7px;
+            span {
+                margin-bottom: -13px;
+            }
+        }
+    }
+}

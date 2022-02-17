@@ -1,11 +1,17 @@
 .header {
     height: 35px;
-    background-color: #009B491A;
+    position: sticky;
+    z-index: 9999;
+    top: 0;
+    background-color: #e5fbef;
 }
 .sub-header {
     height: 80px;
     background-color: #009B49;
     padding-left: 5px;
+    position: sticky;
+    top: 35px;
+    z-index: 9999;
     box-shadow: 4px 4px 32px #00000040;
     color: #fff;
 
@@ -29,6 +35,9 @@
             margin-top: 5px;
         }
     }
+}
+.full-form-mobile {
+    display: none;
 }
 .header-1, .header-2 {
     margin-left: 10px;
@@ -64,6 +73,101 @@
         }
         li a {
             font-weight: 500;
+        }
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .header {
+        height: 35px;
+        position: sticky;
+        top: 0;
+        background-color: #e5fbef;
+        white-space: normal;
+    }
+    .sub-header {
+        height: 100px;
+        background-color: #009B49;
+        padding-left: 5px;
+        position: sticky;
+        z-index: 9999;
+        white-space: normal;
+        align-items: flex-start;
+        top: 35px;
+        box-shadow: 4px 4px 32px #00000040;
+        color: #fff;
+
+        .emb-1 {
+            display: none !important;
+        }
+    
+        .emblem {
+            height: 72px;
+            width: 42px;
+        }
+    
+        .header-1 {
+            span {
+                font-size: 14px !important;
+            }
+            .hl {
+                border-bottom: 1px solid;
+                margin-top: 13px;
+                width: 48px;
+            }
+            .full-form {
+                font-size: 9px !important;
+                font-weight: 500;
+                margin-top: 5px;
+                display: none;
+            }
+        }
+    }
+    .full-form-mobile {
+        font-size: 9px !important;
+        font-weight: 500;
+        display: block;
+        left: 2%;
+        top: 110px;
+        color: #fff;
+        z-index: 10000;
+        position: fixed;
+    }
+    .header-1, .header-2 {
+        margin-left: 10px;
+        margin-bottom: 12px;
+    
+        .hindi-text {
+            font-family: Noto Sans Devanagari;
+            font-weight: 500;
+        }
+        span {
+            font-size: 9px !important;
+            margin-bottom: -17px;
+        }
+    }
+    .vl {
+        border-left: 2px solid black;
+        height: 30px;
+        margin-left: 15px;
+    }
+    
+    .example-spacer {
+        flex: 1 1 auto;
+      }
+    
+    .bread-crumb {
+        ol {
+            padding: 8px 22px;
+    
+            li:not(.active) a {
+                text-decoration: none;
+                color: #328ED1;
+                font-weight: 500;
+            }
+            li a {
+                font-weight: 500;
+            }
         }
     }
 }

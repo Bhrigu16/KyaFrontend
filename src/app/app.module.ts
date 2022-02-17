@@ -8,6 +8,7 @@ import { HeaderModule } from './components/header/header.module';
 import { KyaModule } from './components/kya/kya.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
+import { ReportModule } from './components/report/report.module';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserModule,
     HeaderModule,
     KyaModule,
+    ReportModule,
     FooterModule,
     AppRoutingModule,
     BrowserAnimationsModule,

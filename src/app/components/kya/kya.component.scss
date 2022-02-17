@@ -38,12 +38,29 @@
             }
         }
 
+        .unit-dd {
+            width: auto !important;
+            .p-dropdown-label {
+                color: #B0B0B0;
+                padding: 6px 5px;
+                font-size: 12px;
+            }
+        }
+
+        .unit-panel {
+            .p-dropdown-items-wrapper {
+                font-size: 12px;
+                color: #B0B0B0;
+                width: auto;
+            }
+        }
+
         .capacity {
             padding: 0.58rem 1rem;
             font-size: 12px;
         }
         .capacity-addon {
-            padding: 0.58rem 1rem;
+            padding: 0 3px;
             font-size: 12px;
         }
         .limit-error {
@@ -142,6 +159,126 @@
             font-size: 11px;
             padding: 0.5rem 2.75rem;
             border: 1px solid #43B267;
+        }
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .content {
+        height: 80%;
+        .title {
+            padding: 0 0.5rem;
+            h2 {
+                margin-bottom: 6px;
+                font-size: 20px;
+            }
+            span {
+                font-weight: 500;
+            }
+        }
+        .kya-form {
+            padding: 8px;
+            border: 1px solid #E1E1E1;
+            margin: 8px;
+            border-radius: 8px;
+            height: inherit;
+    
+            .activity-dd {
+                .p-dropdown-label {
+                    font-size: 10px;
+                    color: #B0B0B0;
+                    padding: 9px;
+                    width: 250px;
+                }
+            }
+    
+            .activity-panel {
+                .p-dropdown-items-wrapper {
+                    font-size: 9px;
+                    color: #B0B0B0;
+                    width: 300px;
+                    .p-dropdown-items .p-dropdown-item {
+                        padding: 0.5rem 1rem;
+                        white-space: normal;
+                    }
+                }
+            }
+    
+            .capacity {
+                padding: 0.58rem 1rem;
+                font-size: 10px;
+            }
+            .capacity-addon {
+                padding: 0.58rem 1rem;
+                font-size: 10px;
+            }
+            .limit-error {
+                font-size: 8px;
+                position: absolute;
+                margin-top: 60px;
+            }
+            .button-border {
+                padding: 1rem;
+                border-radius: 16px;
+                border: 2px dashed lightgray;
+    
+                .upload-text {
+                    padding: 0 1.5rem;
+                    align-self: center;
+                    color: #B0B0B0;
+                }
+            }
+            .button-color {
+                background-color: #1B8CFB;
+                color: #fff;
+                font-size: 9px;
+                padding: 0.5rem 2.5rem;
+            }
+            .mobile-upload {
+                padding: 0 !important;
+            }
+            .upload {
+                align-self: center;
+                padding: 1rem;
+                margin: 0 !important;
+                .upload-btn {
+                    background-color: #43B267;
+                    color: #fff;
+                    font-size: 9px;
+                    padding: 0.5rem 2.75rem;
+                    border: 1px solid #43B267;
+                }
+                .upload-btn:disabled {
+                    background-color: #B4B4B480;
+                    color: #000000;
+                    font-size: 9px;
+                    padding: 0.5rem 2.75rem;
+                    border: 1px solid #B4B4B480;
+                }
+            }
+            .error-msg {
+                align-self: center;
+                margin-top: 1.5rem;
+    
+                .p-inline-message .p-inline-message-text {
+                    font-size: 10px;
+                }
+            }
+            .note {
+                color: #D84910;
+                font-size: 10px;
+            }
+            .chip {
+                border: 1px solid #43B267;
+                border-radius: 8px;
+                min-width: 200px;
+                display: inline-block;
+    
+                i {
+                    color: #43B267;
+                    cursor: pointer;
+                }
+            }
         }
     }
 }
