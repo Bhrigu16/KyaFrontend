@@ -1,4 +1,5 @@
-<p-dialog header="Confirm enter captcha proceed to the know your approval" [modal]="true" [(visible)]="displayDialog"
+<ngx-spinner size="medium" type="ball-spin-clockwise-fade"></ngx-spinner>
+<p-dialog header="Enter captcha to proceed" [modal]="true" [(visible)]="displayDialog"
     styleClass="captcha-dialog">
     <div class="d-flex flex-column align-items-center">
         <span>Captcha</span>
@@ -38,16 +39,11 @@
                 <p-dropdown [options]="subActivities" [(ngModel)]="subActivity" optionLabel="name" placeholder="Select"
                     styleClass="activity-dd" panelStyleClass="activity-panel" (onChange)="subActivitySelected($event.value)"></p-dropdown>
             </div>
-            <div class="col-md-4 p-3 d-grid">
+            <div class="col-md-4 p-3 d-grid" *ngFor="let threshold of thresholdUnit">
                 <span>Project Capacity/Extent <span style="color: #F03D3E;">*</span> </span>
                 <div class="p-inputgroup">
-                    <input class="capacity" [ngClass]="{'ng-invalid ng-dirty': capacityError}" type="text" id="capacity-error" [(ngModel)]="capacity" pInputText />
-                    <span class="p-inputgroup-addon capacity-addon" *ngIf="thresholdUnit && thresholdUnit.length==1">({{unit.threshold_unit}})</span>
-                    <span class="p-inputgroup-addon capacity-addon" *ngIf="thresholdUnit.length == 0">(Unit)</span>
-                    <span class="p-inputgroup-addon capacity-addon" *ngIf="thresholdUnit.length > 1">
-                        <p-dropdown [options]="thresholdUnit" [(ngModel)]="unit" optionLabel="threshold_unit" placeholder="Select"
-                    styleClass="unit-dd" panelStyleClass="unit-panel" (onChange)="thresholdUnitSelected($event.value)"></p-dropdown>
-                    </span>
+                    <input class="capacity" [placeholder]="threshold.name" [ngClass]="{'ng-invalid ng-dirty': capacityError}" type="text" id="capacity-error" [(ngModel)]="threshold.capacity" [required]="threshold.required" pInputText />
+                    <span class="p-inputgroup-addon capacity-addon">({{threshold.threshold_unit}})</span>
                 </div>
                 <!-- <small *ngIf="capacityError" id="capacity-error" class="p-error block limit-error">Your capacity input is below threshold value {{subActivity?subActivity.threshold_value:activity.threshold_value}}. Please input more than value.</small> -->
             </div>

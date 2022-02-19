@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { DragNDropDirective } from './drag-ndrop.directive';
 import { ActivitiesService } from 'src/app/services/activities.service';
 import { MessageService } from 'primeng/api';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { MessageService } from 'primeng/api';
     MessageModule,
     DialogModule,
     ToastModule,
-    FormsModule
+    FormsModule,
+    NgxSpinnerModule
   ],
   providers: [ActivitiesService, MessageService],
   exports: [KyaComponent]

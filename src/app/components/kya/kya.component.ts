@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { MessageService } from 'primeng/api';
 import { Activity, Subactivity, ThresholdParameter } from 'src/app/model/activity.model';
 import { ActivityData } from 'src/app/model/activityData.model';
@@ -17,10 +18,8 @@ export class KyaComponent implements OnInit {
   activities: Activity[] = [];
   subActivities: Subactivity[] = [];
   thresholdUnit: ThresholdParameter[] = [];
-  unit: ThresholdParameter = <ThresholdParameter>{};
   activity: Activity = <Activity>{};
   subActivity: Subactivity = <Subactivity>{};
-  capacity: any;
   file: File = null as any;
   fileObj: any;
   error: boolean = false;
@@ -29,7 +28,8 @@ export class KyaComponent implements OnInit {
   userEnterCaptcha: any;
   displayDialog: boolean = false;
   captchaErrorMsg: boolean = false;
-  constructor(private activityService: ActivitiesService, private messageService: MessageService, private router: Router) { }
+  constructor(private activityService: ActivitiesService, private messageService: MessageService,
+              private spinner: NgxSpinnerService) { }
 
   ngOnInit(): void {
     this.activityService.activityService().subscribe((data: Activity[]) => {
@@ -38,29 +38,29 @@ export class KyaComponent implements OnInit {
   }
 
   activitySelected(selectedValue: Activity) {
-    this.subActivities = selectedValue.subactivity;
-    if (this.subActivities.length == 0) {
-      if (selectedValue.thresholdParameter.length >= 1) {
-        this.thresholdUnit = selectedValue.thresholdParameter;
-        this.unit = this.thresholdUnit[0];
+    this.activity = selectedValue;
+    this.spinner.show()
+    this.activityService.subActivityService(selectedValue.id).subscribe((subactivity:Subactivity[]) => {
+      this.subActivities = subactivity;
+      if (this.subActivities.length == 0) {
+        this.spinner.show()
+        this.activityService.thresholdParameterService(selectedValue.id,'activity').subscribe((thresholdParameters:ThresholdParameter[]) => {
+          this.thresholdUnit = thresholdParameters;
+          this.spinner.hide()
+        });
       } else {
+        this.spinner.hide()
         this.thresholdUnit = [];
-        this.unit = <ThresholdParameter>{};
-        this.unit.threshold_unit = 'Unit';
       }
-    } else {
-      this.thresholdUnit = [];
-      this.unit = <ThresholdParameter>{};
-      this.unit.threshold_unit = 'Unit';
-    }
+    })
   }
   subActivitySelected(selectedValue: Subactivity) {
-    this.thresholdUnit = selectedValue.thresholdParameter;
-    this.unit = this.thresholdUnit[0];
-  }
-
-  thresholdUnitSelected(selectedValue: ThresholdParameter) {
-    this.unit = selectedValue;
+    this.subActivity = selectedValue;
+    this.spinner.show()
+    this.activityService.thresholdParameterService(selectedValue.id,'subactivity').subscribe((thresholdParameters:ThresholdParameter[]) => {
+      this.thresholdUnit = thresholdParameters;
+      this.spinner.hide()
+    });
   }
 
   onFileChoose(event: any) {
@@ -80,7 +80,7 @@ export class KyaComponent implements OnInit {
   }
 
   checkForm() {
-    if (((this.activity && this.capacity) || this.subActivity) && (this.file != null && !this.error)) {
+    if ((this.activity || this.subActivity) && (this.file != null && !this.error)) {
       return false;
     } else {
       return true;
@@ -122,7 +122,7 @@ export class KyaComponent implements OnInit {
       const activity = new ActivityData();
       activity.activity = this.activity.name;
       activity.subactivity = this.subActivity?.name;
-      activity.capacity = this.capacity;
+      activity.capacity = this.thresholdUnit[0]?.capacity;
       activity.activityId = this.activity.id;
       activity.subActivityId = this.subActivity.id;
       this.activityService.userActivityService(activity, this.file).subscribe((data: any) => {
@@ -142,19 +142,17 @@ export class KyaComponent implements OnInit {
         //http://localhost:8080/examples/Sourav10_02Integration/gis-map.html?projectType=3&projectSubtype=1&capacity=40&kmlId=1
         window.location.href = hrefLink + "?projectType=" + this.activity.id +
           "&projectSubtype=" + this.subActivity.id +
-          "&capacity=" + this.capacity +
+          "&capacity=" + this.thresholdUnit[0]?.capacity +
           "&kmlId=" + data.id +
           "&projectTypeName=" + this.activity.name +
           "&projectSubtypeName=" + this.subActivity.name +
-          "&capacityUnit=" + this.unit.threshold_unit;
+          "&capacityUnit=" + this.thresholdUnit[0]?.threshold_unit;
 
         //http://localhost/pariveshdss/Sourav10_02Integration/gis-map.html?projectType=3&projectSubtype=1&capacity=40&kmlId=17
 
         this.activity = null as any;
         this.subActivity = null as any;
-        this.unit = <ThresholdParameter>{};
-        this.unit.threshold_unit = 'Unit';
-        this.capacity = null;
+        this.thresholdUnit = [];
         this.subActivities = [];
         this.file = null as any;
         this.fileObj = undefined

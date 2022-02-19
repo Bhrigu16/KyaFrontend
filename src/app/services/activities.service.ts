@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable } from 'rxjs';
-import { Activity } from '../model/activity.model';
+import { Activity, Subactivity, ThresholdParameter } from '../model/activity.model';
 import { ActivityData } from '../model/activityData.model';
 import { baseUrlGis } from '../shared/app-constant';
 
@@ -18,6 +18,20 @@ export class ActivitiesService {
       .pipe(map(response => {
         return <Activity[]>response;
       }));
+  }
+
+  subActivityService(activityid:number): Observable<Subactivity[]> {
+    const params = new HttpParams().set('id',activityid);
+    return this.http.get<Subactivity[]>(this.baseUrl+'getSubactivity',{params:params});
+  }
+
+  thresholdParameterService(id:number,type:string): Observable<ThresholdParameter[]> {
+    const params = new HttpParams().set('id',id);
+    if(type == 'activity') {
+      return this.http.get<ThresholdParameter[]>(this.baseUrl+'getActivityThreshold',{params:params});
+    } else {
+      return this.http.get<ThresholdParameter[]>(this.baseUrl+'getSubActivityThreshold',{params:params});
+    }
   }
 
   userActivityService(activity: ActivityData, file: File) {
