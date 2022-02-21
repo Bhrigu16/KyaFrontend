@@ -29,7 +29,7 @@ export class KyaComponent implements OnInit {
   displayDialog: boolean = false;
   captchaErrorMsg: boolean = false;
   constructor(private activityService: ActivitiesService, private messageService: MessageService,
-              private spinner: NgxSpinnerService) { }
+    private spinner: NgxSpinnerService) { }
 
   ngOnInit(): void {
     this.activityService.activityService().subscribe((data: Activity[]) => {
@@ -40,11 +40,11 @@ export class KyaComponent implements OnInit {
   activitySelected(selectedValue: Activity) {
     this.activity = selectedValue;
     this.spinner.show()
-    this.activityService.subActivityService(selectedValue.id).subscribe((subactivity:Subactivity[]) => {
+    this.activityService.subActivityService(selectedValue.id).subscribe((subactivity: Subactivity[]) => {
       this.subActivities = subactivity;
       if (this.subActivities.length == 0) {
         this.spinner.show()
-        this.activityService.thresholdParameterService(selectedValue.id,'activity').subscribe((thresholdParameters:ThresholdParameter[]) => {
+        this.activityService.thresholdParameterService(selectedValue.id, 'activity').subscribe((thresholdParameters: ThresholdParameter[]) => {
           this.thresholdUnit = thresholdParameters;
           this.spinner.hide()
         });
@@ -57,7 +57,7 @@ export class KyaComponent implements OnInit {
   subActivitySelected(selectedValue: Subactivity) {
     this.subActivity = selectedValue;
     this.spinner.show()
-    this.activityService.thresholdParameterService(selectedValue.id,'subactivity').subscribe((thresholdParameters:ThresholdParameter[]) => {
+    this.activityService.thresholdParameterService(selectedValue.id, 'subactivity').subscribe((thresholdParameters: ThresholdParameter[]) => {
       this.thresholdUnit = thresholdParameters;
       this.spinner.hide()
     });
@@ -87,6 +87,31 @@ export class KyaComponent implements OnInit {
     }
   }
 
+  ErrorThresholdCapacity() {
+    let isTrue: Boolean = false;
+    let numbers = /^[0-9]+$/; //Static regex
+    for (let i = 0; i < this.thresholdUnit.length; i++) {
+      if (this.thresholdUnit[i].capacity?.toString().match(numbers)) {
+        isTrue = true;
+      } else {
+        isTrue = false;
+        break;
+      }
+    }
+    return isTrue;
+  }
+
+  checkErrorThresholdCapacity(thresholdObj: ThresholdParameter) {
+    let isTrue: Boolean = false;
+    let numbers = /^[0-9]+$/; //Static regex
+    if (thresholdObj.capacity?.toString().match(numbers)) {
+      isTrue = true;
+    } else {
+      isTrue = false;
+    }
+    return isTrue;
+  }
+
   removeFile() {
     this.file = null as any;
     this.fileObj = null;
@@ -110,7 +135,14 @@ export class KyaComponent implements OnInit {
     // } else {
     //   this.capacityError = false;
     // }
-    this.displayDialog = true;
+    if (!this.ErrorThresholdCapacity()) {
+      this.displayDialog = false
+      this.capacityError = true;
+
+    } else {
+      this.displayDialog = true;
+      this.capacityError = false;
+    }
     this.captchaErrorMsg = false;
     this.getCaptcha(6);
   }

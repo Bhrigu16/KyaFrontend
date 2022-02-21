@@ -1,14 +1,16 @@
 <ngx-spinner size="medium" type="ball-spin-clockwise-fade"></ngx-spinner>
-<p-dialog header="Enter captcha to proceed" [modal]="true" [(visible)]="displayDialog"
-    styleClass="captcha-dialog">
+<p-dialog header="Enter captcha to proceed" [modal]="true" [(visible)]="displayDialog" styleClass="captcha-dialog">
     <div class="d-flex flex-column align-items-center">
         <span>Captcha</span>
         <div>
             <canvas style="border: 1px solid; border-radius: 4px;" width="200" height="60" #myCanvas></canvas>
         </div>
         <div class="d-grid captcha">
-            <input class="captcha-input" [ngClass]="{'ng-invalid ng-dirty': captchaErrorMsg}" type="text" (keyup)="resetError()" aria-describedby="error-captcha" placeholder="Enter Captcha" [(ngModel)]="userEnterCaptcha" pInputText />
-            <small *ngIf="captchaErrorMsg" id="error-captcha" class="p-error block">Captcha mismatch, Please enter again.</small>
+            <input class="captcha-input" [ngClass]="{'ng-invalid ng-dirty': captchaErrorMsg}" type="text"
+                (keyup)="resetError()" aria-describedby="error-captcha" placeholder="Enter Captcha"
+                [(ngModel)]="userEnterCaptcha" pInputText />
+            <small *ngIf="captchaErrorMsg" id="error-captcha" class="p-error block">Captcha mismatch, Please enter
+                again.</small>
         </div>
     </div>
     <ng-template pTemplate="footer">
@@ -20,7 +22,8 @@
 <div class="container-fluid content">
     <div class="title">
         <h2>Know Your Approvals</h2>
-        <span>Please fill the below given form to know your tentative list of Clearance and Approvals <i class="pi pi-question-circle"></i></span>
+        <span>Please fill the below given form to know your tentative list of Clearance and Approvals <i
+                class="pi pi-question-circle"></i></span>
     </div>
     <div class="d-flex flex-row-reverse">
         <span class="pe-3" style="font-weight: 500;"><span style="color: #F03D3E;">*</span> Indicates mandatory
@@ -37,15 +40,20 @@
             <div class="col-md-4 p-3 d-grid" *ngIf="subActivities.length > 0">
                 <span>Sub Activity <span style="color: #F03D3E;">*</span> </span>
                 <p-dropdown [options]="subActivities" [(ngModel)]="subActivity" optionLabel="name" placeholder="Select"
-                    styleClass="activity-dd" panelStyleClass="activity-panel" (onChange)="subActivitySelected($event.value)"></p-dropdown>
+                    styleClass="activity-dd" panelStyleClass="activity-panel"
+                    (onChange)="subActivitySelected($event.value)"></p-dropdown>
             </div>
             <div class="col-md-4 p-3 d-grid" *ngFor="let threshold of thresholdUnit">
                 <span>Project Capacity/Extent <span style="color: #F03D3E;">*</span> </span>
                 <div class="p-inputgroup">
-                    <input class="capacity" [placeholder]="threshold.name" [ngClass]="{'ng-invalid ng-dirty': capacityError}" type="text" id="capacity-error" [(ngModel)]="threshold.capacity" [required]="threshold.required" pInputText />
+                    <input class="capacity" [placeholder]="threshold.name"
+                        [ngClass]="{'ng-invalid ng-dirty': !checkErrorThresholdCapacity(threshold) &&capacityError}"
+                        type="text" id="capacity-error" [(ngModel)]="threshold.capacity" [required]="threshold.required"
+                        pInputText />
                     <span class="p-inputgroup-addon capacity-addon">({{threshold.threshold_unit}})</span>
                 </div>
-                <!-- <small *ngIf="capacityError" id="capacity-error" class="p-error block limit-error">Your capacity input is below threshold value {{subActivity?subActivity.threshold_value:activity.threshold_value}}. Please input more than value.</small> -->
+                <small *ngIf="!checkErrorThresholdCapacity(threshold) &&capacityError" id="capacity-error"
+                    class="p-error block limit-error">Field is required</small>
             </div>
         </div>
         <div class="row d-flex pt-3 mobile-upload">
