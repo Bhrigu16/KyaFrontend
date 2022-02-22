@@ -39,21 +39,32 @@
             </div>
             <div class="col-md-4 p-3 d-grid" *ngIf="subActivities.length > 0">
                 <span>Sub Activity <span style="color: #F03D3E;">*</span> </span>
-                <p-dropdown [options]="subActivities" [(ngModel)]="subActivity" optionLabel="name" placeholder="Select"
+                <p-dropdown [ngClass]="{'ng-invalid ng-dirty': subActivityError}" [options]="subActivities" [(ngModel)]="subActivity" optionLabel="name" placeholder="Select"
                     styleClass="activity-dd" panelStyleClass="activity-panel"
                     (onChange)="subActivitySelected($event.value)"></p-dropdown>
+                <small class="p-error block limit-error"
+                    *ngIf="subActivityError">SubActivity option is not selected</small>
             </div>
             <div class="col-md-4 p-3 d-grid" *ngFor="let threshold of thresholdUnit">
                 <span>Project Capacity/Extent <span style="color: #F03D3E;">*</span> </span>
                 <div class="p-inputgroup">
                     <input class="capacity" [placeholder]="threshold.name"
-                        [ngClass]="{'ng-invalid ng-dirty': !checkErrorThresholdCapacity(threshold) &&capacityError}"
-                        type="text" id="capacity-error" [(ngModel)]="threshold.capacity" [required]="threshold.required"
-                        pInputText />
+                        [ngClass]="{'ng-invalid ng-dirty': capacityError}" type="text" id="capacity-error"
+                        [(ngModel)]="threshold.capacity" [required]="threshold.required"
+                        (keyup)="checkErrorThresholdCapacity($event.target)" pInputText />
                     <span class="p-inputgroup-addon capacity-addon">({{threshold.threshold_unit}})</span>
                 </div>
-                <small *ngIf="!checkErrorThresholdCapacity(threshold) &&capacityError" id="capacity-error"
-                    class="p-error block limit-error">Field is required</small>
+                <small class="p-error block limit-error"
+                    *ngIf="isCapacityEmpty(threshold.capacity)&&IsKeyPress">Capacity Field is required</small>
+                <small class="p-error block limit-error"
+                    *ngIf="!isCapacityNegative(threshold.capacity)&&!isCapacityEmpty(threshold.capacity)">Capacity
+                    cannot be in Negative</small>
+
+                <small class="p-error block limit-error"
+                    *ngIf="!isCapacityNumeric(threshold.capacity)&&!isCapacityEmpty(threshold.capacity)&&isCapacityNegative(threshold.capacity)"><sup>*</sup>
+                    Only Numbers are allowed</small>
+                <!-- <small *ngIf="!checkErrorThresholdCapacity(threshold) &&capacityError" id="capacity-error">Field is
+                    required</small> -->
             </div>
         </div>
         <div class="row d-flex pt-3 mobile-upload">
@@ -66,13 +77,13 @@
                     <div class="upload-text">or Drop Files</div>
                 </div>
             </div>
-            <div class="col-md-4 upload">
+            <div class="col-md-8 d-flex upload">
                 <button pButton pRipple type="button" [disabled]="checkForm()" label="Submit"
                     class="p-button-raised p-button-sm upload-btn" (click)="uploadKml()"></button>
-            </div>
-            <div class="error-msg" *ngIf="error">
-                <p-message severity="error" text="Chosen file is not kml. Please choose the kml file to proceed">
-                </p-message>
+                    <div class="error-msg" *ngIf="error">
+                        <p-message severity="error" text="Chosen file is not kml. Please choose the kml file to proceed">
+                        </p-message>
+                    </div>
             </div>
         </div>
         <div class="row">

@@ -1,5 +1,4 @@
 import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MessageService } from 'primeng/api';
 import { Activity, Subactivity, ThresholdParameter } from 'src/app/model/activity.model';
@@ -22,9 +21,13 @@ export class KyaComponent implements OnInit {
   subActivity: Subactivity = <Subactivity>{};
   file: File = null as any;
   fileObj: any;
+  isEmptyCapacity:boolean=false;
+  isCapacityNumeral:boolean=false;
   error: boolean = false;
   capacityError: boolean = false;
   captchatext: any;
+  subActivityError: boolean = false;
+  IsKeyPress:boolean=false;
   userEnterCaptcha: any;
   displayDialog: boolean = false;
   captchaErrorMsg: boolean = false;
@@ -39,6 +42,7 @@ export class KyaComponent implements OnInit {
 
   activitySelected(selectedValue: Activity) {
     this.activity = selectedValue;
+    this.IsKeyPress = false;
     this.spinner.show()
     this.activityService.subActivityService(selectedValue.id).subscribe((subactivity: Subactivity[]) => {
       this.subActivities = subactivity;
@@ -56,6 +60,8 @@ export class KyaComponent implements OnInit {
   }
   subActivitySelected(selectedValue: Subactivity) {
     this.subActivity = selectedValue;
+    this.subActivityError = false;
+    this.IsKeyPress = false;
     this.spinner.show()
     this.activityService.thresholdParameterService(selectedValue.id, 'subactivity').subscribe((thresholdParameters: ThresholdParameter[]) => {
       this.thresholdUnit = thresholdParameters;
@@ -74,22 +80,102 @@ export class KyaComponent implements OnInit {
     if (this.file.name.split('.').pop() != 'kml') {
       this.error = true;
     } else {
+      this.activityService.fileValidation(this.file).subscribe(flag => {
+        if(flag) {
+          this.error = false
+        } else {
+          this.error = true;
+        }
+      })
       this.error = false;
     }
-    console.log(this.fileObj);
+    console.log(this.file.type);
   }
 
-  checkForm() {
-    if ((this.activity || this.subActivity) && (this.file != null && !this.error)) {
-      return false;
-    } else {
+  isCapacityEmpty(val: any) {
+
+    if (!val) {
+      return true; //capacity is empty
+    }
+    if (val?.toString().length == 0) {
       return true;
     }
+    else { return false }
   }
+
+  isCapacityNegative(val: any) {
+    let isTrue: boolean = false;
+    let regex = /^-/; //Static regex
+    if (!val?.toString().match(regex)) {
+      isTrue = true;
+
+    } else {
+      isTrue = false;
+
+    }
+
+
+    return isTrue;
+  }
+  isCapacityNumeric(val: any) {
+    let isTrue: boolean = false;
+    let numbers = /^[0-9]+$/; //Static regex
+    if (this.isCapacityEmpty(val)) {
+      return false;
+    }
+
+    if (val?.toString().match(numbers)) {
+      isTrue = true;
+
+    } else {
+      isTrue = false;
+
+    }
+
+
+    return isTrue;
+  }
+
+
+  checkErrorThresholdCapacity(capacity: any) {
+    this.IsKeyPress = true;
+    this.isEmptyCapacity = this.isCapacityEmpty(capacity.value);
+    this.isCapacityNumeral = this.isCapacityNumeric(capacity.value);
+
+
+  }
+
+
 
   ErrorThresholdCapacity() {
     let isTrue: Boolean = false;
+
     let numbers = /^[0-9]+$/; //Static regex
+
+    //in case regex is coming from DB use below code
+
+    //let regExDB=this.thresholdUnit[i].regex
+
+    //for(let i =0;i<this.thresholdUnit.length;i++){
+
+    //   if(this.thresholdUnit[i].capacity.toString().match(regExDB)){
+
+    //     isTrue=true;
+
+
+
+    //   }else{
+
+    //     isTrue=false;
+
+    //     break;
+
+    //   }
+
+
+
+    // }
+
     for (let i = 0; i < this.thresholdUnit.length; i++) {
       if (this.thresholdUnit[i].capacity?.toString().match(numbers)) {
         isTrue = true;
@@ -101,15 +187,12 @@ export class KyaComponent implements OnInit {
     return isTrue;
   }
 
-  checkErrorThresholdCapacity(thresholdObj: ThresholdParameter) {
-    let isTrue: Boolean = false;
-    let numbers = /^[0-9]+$/; //Static regex
-    if (thresholdObj.capacity?.toString().match(numbers)) {
-      isTrue = true;
+  checkForm() {
+    if ((this.activity || this.subActivity) && (this.file != null && !this.error)) {
+      return false;
     } else {
-      isTrue = false;
+      return true;
     }
-    return isTrue;
   }
 
   removeFile() {
@@ -135,16 +218,23 @@ export class KyaComponent implements OnInit {
     // } else {
     //   this.capacityError = false;
     // }
+    if(this.subActivities && this.subActivities.length > 0 && Object.keys(this.subActivity).length==0) {
+      this.subActivityError = true;
+    } else {
+      this.subActivityError = false;
+    }
     if (!this.ErrorThresholdCapacity()) {
       this.displayDialog = false
       this.capacityError = true;
+      this.IsKeyPress = true;
 
     } else {
       this.displayDialog = true;
       this.capacityError = false;
+      this.IsKeyPress = false;
+      this.captchaErrorMsg = false;
+      this.getCaptcha(6);
     }
-    this.captchaErrorMsg = false;
-    this.getCaptcha(6);
   }
 
   checkCaptcha() {
