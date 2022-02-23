@@ -9,7 +9,6 @@ import { baseUrl, baseUrlGis } from '../shared/app-constant';
   providedIn: 'root'
 })
 export class ActivitiesService {
-  baseUrl = "http://localhost:9090/kya/"
   constructor(private http: HttpClient) { }
 
   activityService(): Observable<Activity[]> {

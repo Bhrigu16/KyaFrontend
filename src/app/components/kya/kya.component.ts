@@ -55,6 +55,9 @@ export class KyaComponent implements OnInit {
       } else {
         this.spinner.hide()
         this.thresholdUnit = [];
+        this.subActivity = <Subactivity>{}
+
+        //this.subActivities = [];
       }
     })
   }
@@ -176,14 +179,31 @@ export class KyaComponent implements OnInit {
 
     // }
 
-    for (let i = 0; i < this.thresholdUnit.length; i++) {
-      if (this.thresholdUnit[i].capacity?.toString().match(numbers)) {
-        isTrue = true;
-      } else {
-        isTrue = false;
-        break;
+    if(this.thresholdUnit.length !=0) {
+
+     
+
+      for (let i = 0; i < this.thresholdUnit.length; i++) {
+
+        if (this.thresholdUnit[i].capacity?.toString().match(numbers)) {
+
+          isTrue = true;
+
+        } else {
+
+          isTrue = false;
+
+          break;
+
+        }
+
       }
-    }
+
+} else {
+
+  isTrue = true;
+
+}
     return isTrue;
   }
 
